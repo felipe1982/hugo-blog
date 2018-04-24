@@ -15,6 +15,6 @@ tags:
   - nikon
 
 ---
-[<img class="alignnone  wp-image-796" title="JumpingGraduationErica2" src="http://felipe.com.au/blog/wp-content/uploads/2012/01/JumpingGraduationErica2.gif" alt="" width="532" height="591" srcset="http://felipe.com.au/wp-content/uploads/2012/01/JumpingGraduationErica2.gif 665w, http://felipe.com.au/wp-content/uploads/2012/01/JumpingGraduationErica2-269x300.gif 269w" sizes="(max-width: 532px) 100vw, 532px" />][1]
+[<img class="alignnone  wp-image-796" title="JumpingGraduationErica2" src="/blog/wp-content/uploads/2012/01/JumpingGraduationErica2.gif" alt="" width="532" height="591" srcset="/wp-content/uploads/2012/01/JumpingGraduationErica2.gif 665w, /wp-content/uploads/2012/01/JumpingGraduationErica2-269x300.gif 269w" sizes="(max-width: 532px) 100vw, 532px" />][1]
 
- [1]: http://felipe.com.au/blog/wp-content/uploads/2012/01/JumpingGraduationErica2.gif
+ [1]: /blog/wp-content/uploads/2012/01/JumpingGraduationErica2.gif

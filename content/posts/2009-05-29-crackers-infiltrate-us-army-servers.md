@@ -10,7 +10,7 @@ tags:
   - security
 
 ---
-<img class="alignright size-medium wp-image-322" title="army-logo" src="http://www.felipe.com.au/blog/wp-content/uploads/2009/05/army-logo-223x300.gif" alt="army-logo" width="134" height="180" srcset="http://felipe.com.au/wp-content/uploads/2009/05/army-logo-223x300.gif 223w, http://felipe.com.au/wp-content/uploads/2009/05/army-logo.gif 350w" sizes="(max-width: 134px) 100vw, 134px" />
+<img class="alignright size-medium wp-image-322" title="army-logo" src="/wp-content/uploads/2009/05/army-logo-223x300.gif" alt="army-logo" width="134" height="180" srcset="/wp-content/uploads/2009/05/army-logo-223x300.gif 223w, /wp-content/uploads/2009/05/army-logo.gif 350w" sizes="(max-width: 134px) 100vw, 134px" />
 
 _<span id="articleBody">The hacks are troubling in that they appear to have rendered useless supposedly sophisticated Defense Department tools and procedures designed to prevent such breaches. The department and its branches spend millions of dollars each year on pricey security and antivirus software and employ legions of experts to deploy and manage the tools. </span>_
 

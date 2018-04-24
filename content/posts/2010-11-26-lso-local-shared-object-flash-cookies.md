@@ -12,7 +12,7 @@ tags:
   - tracking
 
 ---
-### <img class="alignright size-full wp-image-731" title="better privacy lso flash cookies" src="http://www.felipe.com.au/blog/wp-content/uploads/2010/11/logo.png" alt="better privacy lso flash cookies" width="150" height="150" />Why are Flash Cookies Harmful?
+### <img class="alignright size-full wp-image-731" title="better privacy lso flash cookies" src="/wp-content/uploads/2010/11/logo.png" alt="better privacy lso flash cookies" width="150" height="150" />Why are Flash Cookies Harmful?
 
   * they are never expiring &#8211; staying on your computer for an unlimited time.
   * by default they offer a storage of 100 KB (compare: Usual cookies 4 KB).

@@ -12,8 +12,8 @@ John Lennon would have been 69 years old today.
 
 Happy Birthday ol&#8217; boy.
 
-[<img class="size-thumbnail wp-image-429 alignnone" title="lennon1" src="http://www.felipe.com.au/blog/wp-content/uploads/2009/10/lennon1-150x150.jpg" alt="lennon1" width="150" height="150" />][1]
+[<img class="size-thumbnail wp-image-429 alignnone" title="lennon1" src="/wp-content/uploads/2009/10/lennon1-150x150.jpg" alt="lennon1" width="150" height="150" />][1]
 
 _You may say I&#8217;m a dreamer, but I&#8217;m not the only one._
 
- [1]: http://www.felipe.com.au/blog/wp-content/uploads/2009/10/lennon1.jpg
+ [1]: /wp-content/uploads/2009/10/lennon1.jpg

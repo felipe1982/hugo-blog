@@ -8,7 +8,7 @@ categories:
   - computers
 
 ---
-[<img class="alignleft size-medium wp-image-388" title="bsdmag" src="http://www.felipe.com.au/blog/wp-content/uploads/2009/07/bsdmag-212x300.jpg" alt="bsdmag" width="212" height="300" srcset="http://felipe.com.au/wp-content/uploads/2009/07/bsdmag-212x300.jpg 212w, http://felipe.com.au/wp-content/uploads/2009/07/bsdmag.jpg 400w" sizes="(max-width: 212px) 100vw, 212px" />][1]
+[<img class="alignleft size-medium wp-image-388" title="bsdmag" src="/wp-content/uploads/2009/07/bsdmag-212x300.jpg" alt="bsdmag" width="212" height="300" srcset="/wp-content/uploads/2009/07/bsdmag-212x300.jpg 212w, /wp-content/uploads/2009/07/bsdmag.jpg 400w" sizes="(max-width: 212px) 100vw, 212px" />][1]
 
 New BSD magazine, available in stores or online at [bsdmag.org][2]
 

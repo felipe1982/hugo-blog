@@ -14,8 +14,8 @@ These are pictures of the free Hotel room Korean Air set me up with. I had to wa
 
 Excuse the poor quality pics &#8211; they were taken with my laptop&#8217;s webcam.
 
-[<img class="alignnone size-thumbnail wp-image-574" title="Hotel Room" src="http://www.felipe.com.au/blog/wp-content/uploads/2010/02/235628-150x150.jpg" alt="" width="150" height="150" />][1] [<img class="alignnone size-thumbnail wp-image-573" title="Hotel Room" src="http://www.felipe.com.au/blog/wp-content/uploads/2010/02/235615-150x150.jpg" alt="" width="150" height="150" />][2] [<img class="alignnone size-thumbnail wp-image-572" title="Hotel Room" src="http://www.felipe.com.au/blog/wp-content/uploads/2010/02/235556-150x150.jpg" alt="" width="150" height="150" />][3]
+[<img class="alignnone size-thumbnail wp-image-574" title="Hotel Room" src="/wp-content/uploads/2010/02/235628-150x150.jpg" alt="" width="150" height="150" />][1] [<img class="alignnone size-thumbnail wp-image-573" title="Hotel Room" src="/wp-content/uploads/2010/02/235615-150x150.jpg" alt="" width="150" height="150" />][2] [<img class="alignnone size-thumbnail wp-image-572" title="Hotel Room" src="/wp-content/uploads/2010/02/235556-150x150.jpg" alt="" width="150" height="150" />][3]
 
- [1]: http://www.felipe.com.au/blog/wp-content/uploads/2010/02/235628.jpg
- [2]: http://www.felipe.com.au/blog/wp-content/uploads/2010/02/235615.jpg
- [3]: http://www.felipe.com.au/blog/wp-content/uploads/2010/02/235556.jpg
+ [1]: /wp-content/uploads/2010/02/235628.jpg
+ [2]: /wp-content/uploads/2010/02/235615.jpg
+ [3]: /wp-content/uploads/2010/02/235556.jpg

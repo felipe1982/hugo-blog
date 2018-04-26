@@ -1,4 +1,4 @@
 baseURL = "http://static.felipe1982.com"
 languageCode = "en-us"
-title = "Felipe Alvarez's Static S3 Blog"
+title = "Felipe Alvarez's Blog"
 theme = "hugo-paper"

@@ -16,6 +16,7 @@ phases:
       #- ./hugo -v --destination public/
       - ./hugo -v --buildDrafts --destination public/
       - aws --debug s3 sync --delete --acl 'public-read' 'public/' 's3://felipe1982.com'
+      - aws --debug s3 website --index-document index.html --error-document 404.html s3://felipe1982.com
 artifacts:
   files:
     - ./public

@@ -1,0 +1,20 @@
+---
+version: 0.2
+phases:
+  install:
+    commands:
+      - wget https://github.com/gohugoio/hugo/releases/download/v0.39/hugo_0.39_Linux-64bit.tar.gz
+      - tar -xf hugo_0.39_Linux-64bit.tar.gz
+      - hugo version
+      - aws --version
+  pre_build:
+    commands:
+      - /bin/rm -rf public/
+  build:
+    commands:
+      #- hugo -v --destination public/
+      - hugo -v --buildDrafts --destination public/
+      - aws s3 sync --delete --acl 'public-read' 'public/' 's3://static.felipe1982.com'
+artifacts:
+  files:
+    - public/

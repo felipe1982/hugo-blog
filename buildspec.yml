@@ -10,12 +10,12 @@ phases:
   pre_build:
     commands:
       - /bin/rm -rf public/
-      - aws s3 ls s3://felipe1982.com
+      - aws --debug s3 ls s3://felipe1982.com
   build:
     commands:
       #- ./hugo -v --destination public/
       - ./hugo -v --buildDrafts --destination public/
-      - aws s3 sync --delete --acl 'public-read' 'public/' 's3://felipe1982.com'
+      - aws --debug s3 sync --delete --acl 'public-read' 'public/' 's3://felipe1982.com'
 artifacts:
   files:
     - ./public

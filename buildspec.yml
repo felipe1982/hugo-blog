@@ -22,7 +22,3 @@ phases:
   post_build:
     commands:
       - ls -Fl public/
-artifacts:
-  base-directory: public
-  files:
-    - '**/*'

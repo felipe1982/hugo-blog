@@ -17,7 +17,8 @@ phases:
       - ./hugo -v --buildDrafts --destination public/
   build:
     commands:
-      - aws --region us-east-1 s3 sync --delete --acl 'public-read' 'public/' 's3://felipe1982.com'
+      # - aws --region us-east-1 s3 sync --delete --acl 'public-read' 'public/' 's3://felipe1982.com'
+      - aws --region us-east-1 s3 sync --acl 'public-read' 'public/' 's3://felipe1982.com'
   post_build:
     commands:
       - ls -Fl public/

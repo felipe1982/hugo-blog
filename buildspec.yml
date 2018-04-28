@@ -9,16 +9,17 @@ phases:
       - aws --version
   pre_build:
     commands:
-      - /bin/rm -rf public/
-      - aws --region us-east-1 s3 ls s3://felipe1982.com
+      - git submodule init
+      - git submodule update
+      # - aws --region us-east-1 s3 ls s3://felipe1982.com
+      - aws --region us-east-1 s3 website --index-document index.html --error-document 404.html s3://felipe1982.com
       - ./hugo -v --buildDrafts --destination public/
   build:
     commands:
       - aws --region us-east-1 s3 sync --delete --acl 'public-read' 'public/' 's3://felipe1982.com'
-      - aws --region us-east-1 s3 website --index-document index.html --error-document 404.html s3://felipe1982.com
   post_build:
     commands:
-      - ls -l public/
+      - ls -Fl public/
 artifacts:
   base-directory: public
   files:

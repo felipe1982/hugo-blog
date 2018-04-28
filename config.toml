@@ -1,4 +1,4 @@
-baseURL = "http://static.felipe1982.com"
+baseURL = "http://felipe1982.com"
 languageCode = "en-us"
 title = "Felipe Alvarez's Blog"
 theme = "hugo-paper"

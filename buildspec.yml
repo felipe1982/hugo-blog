@@ -10,13 +10,14 @@ phases:
   pre_build:
     commands:
       - /bin/rm -rf public/
-      - aws --region us-east-1 --debug s3 ls s3://felipe1982.com
-  build:
-    commands:
+      - aws --region us-east-1 s3 ls s3://felipe1982.com
       #- ./hugo -v --destination public/
       - ./hugo -v --buildDrafts --destination public/
-      - aws --region us-east-1 --debug s3 sync --delete --acl 'public-read' 'public/' 's3://felipe1982.com'
-      - aws --region us-east-1 --debug s3 website --index-document index.html --error-document 404.html s3://felipe1982.com
+      - ls -l public/
+  build:
+    commands:
+      - aws --region us-east-1 s3 sync --delete --acl 'public-read' 'public/' 's3://felipe1982.com'
+      - aws --region us-east-1 s3 website --index-document index.html --error-document 404.html s3://felipe1982.com
 artifacts:
   files:
     - ./public

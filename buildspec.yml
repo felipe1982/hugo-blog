@@ -13,7 +13,7 @@ phases:
       - ./hugo -v --buildDrafts --destination public/ --baseURL $WEBSITE_URL
   build:
     commands:
-      - aws s3 sync --delete --acl 'public-read' 'public/' 's3://$S3_WEBSITE_BUCKET'
+      - aws s3 sync --delete --acl public-read public/ s3://$S3_WEBSITE_BUCKET
   post_build:
     commands:
       - ls -Fl public/

@@ -286,3 +286,7 @@ Resources:
               Resource:
               - !Sub "arn:aws:logs:us-east-1:638088845137:log-group:/aws/codebuild/${CodeBuildName}"
               - !Sub "arn:aws:logs:us-east-1:638088845137:log-group:/aws/codebuild/${CodeBuildName}:*"
+
+Outputs:
+  WebsiteURL:
+    Value: !GetAtt S3WebsiteBucket.WebsiteURL

@@ -9,8 +9,6 @@ phases:
       - aws --version
   pre_build:
     commands:
-      - git submodule init
-      - git submodule update
       # - aws --region us-east-1 s3 ls s3://felipe1982.com
       - aws --region us-east-1 s3 website --index-document index.html --error-document 404.html s3://felipe1982.com
       - aws --region us-east-1 s3api put-bucket-policy --bucket felipe1982.com --policy file://bucket-policy.json

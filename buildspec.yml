@@ -3,19 +3,17 @@ version: 0.2
 phases:
   install:
     commands:
+      - echo $PATH
       - wget https://github.com/gohugoio/hugo/releases/download/v0.39/hugo_0.39_Linux-64bit.tar.gz
       - tar -vxf hugo_0.39_Linux-64bit.tar.gz
       - ./hugo version
       - aws --version
   pre_build:
     commands:
-      - aws --region us-east-1 s3 website --index-document index.html --error-document 404.html s3://$S3_WEBSITE_BUCKET
-      - aws --region us-east-1 s3api put-bucket-policy --bucket $S3_WEBSITE_BUCKET --policy file://bucket-policy.json
       - ./hugo -v --buildDrafts --destination public/ --baseURL $WEBSITE_URL
   build:
     commands:
-      # - aws --region us-east-1 s3 sync --delete --acl 'public-read' 'public/' 's3://felipe1982.com'
-      - aws --region us-east-1 s3 sync --acl 'public-read' 'public/' 's3://$S3_WEBSITE_BUCKET'
+      - aws s3 sync --delete --acl 'public-read' 'public/' 's3://$S3_WEBSITE_BUCKET'
   post_build:
     commands:
       - ls -Fl public/

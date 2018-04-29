@@ -74,7 +74,28 @@ Resources:
               InputArtifacts:
                 - Name: hugo-source-files
               Configuration:
-                ProjectName: !Ref CodeBuildName
+                ProjectName: !Ref CodeBuildJob
+
+  CodeBuildJob:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Ref CodeBuildName
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/ubuntu-base:14.04
+        EnvironmentVariables:
+          - Name: S3_WEBSITE_BUCKET
+            Value: !Ref S3WebsiteBucket
+          - Name: WEBSITE_URL
+            Value: !Ref WebsiteUrl
+      ServiceRole: !GetAtt CodeBuildIamRole.Arn
+      Source:
+        BuildSpec: buildspec.yml
+        Type: CODEPIPELINE
+      TimeoutInMinutes: 6
 
   CodePipelineIamRole:
     Type: AWS::IAM::Role
@@ -240,19 +261,3 @@ Resources:
               Resource:
               - arn:aws:logs:us-east-1:638088845137:log-group:/aws/codebuild/hugo-blog
               - arn:aws:logs:us-east-1:638088845137:log-group:/aws/codebuild/hugo-blog:*
-
-  BuildJob:
-    Type: AWS::CodeBuild::Project
-    Properties:
-      Name: !Ref CodeBuildName
-      Artifacts:
-        Type: CODEPIPELINE
-      Environment:
-        Type: LINUX_CONTAINER
-        ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/ubuntu-base:14.04
-      ServiceRole: !GetAtt CodeBuildIamRole.Arn
-      Source:
-        BuildSpec: buildspec.yml
-        Type: CODEPIPELINE
-      TimeoutInMinutes: 6

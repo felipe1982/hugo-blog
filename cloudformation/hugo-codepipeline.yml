@@ -3,23 +3,23 @@ Parameters:
 
   RepositoryName:
     Type: String
-    Default: hugo-blog2
+    Default: hugo-blog
 
   CodeBuildName:
     Type: String
-    Default: hugo-blog2
+    Default: hugo-blog
 
   CodePipelineName:
     Type: String
-    Default: hugo-blog2
+    Default: hugo-blog
 
   WebsiteUrl:
     Type: String
-    Default: felipe1982.example.com
+    Default: myhugoblog.example.com
 
   S3WebsiteBucketName:
     Type: String
-    Default: felipe1982.example.com
+    Default: myhugoblog.example.com
 
   S3CodePipelineBucketName:
     Type: String
@@ -32,11 +32,26 @@ Resources:
     Properties:
       BucketName: !Sub "${S3CodePipelineBucketName}-${AWS::Region}-${AWS::AccountId}"
 
+  S3WebsiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3WebsiteBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          -
+            Sid: PublicReadForGetBucketObjects
+            Effect: Allow
+            Principal: '*'
+            Action:
+              - 's3:GetObject'
+            Resource:
+              - !Sub "${S3WebsiteBucket.Arn}/*"
+
   S3WebsiteBucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Ref S3WebsiteBucketName
-      AccessControl: "PublicRead"
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: 404.html

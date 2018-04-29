@@ -1,20 +1,26 @@
 ---
 Parameters:
+
   RepositoryName:
     Type: String
     Default: hugo-blog2
+
   CodeBuildName:
     Type: String
     Default: hugo-blog2
+
   CodePipelineName:
     Type: String
     Default: hugo-blog2
+
   WebsiteUrl:
     Type: String
     Default: felipe1982.example.com
+
   S3WebsiteBucketName:
     Type: String
     Default: felipe1982.example.com
+
   S3CodePipelineBucketName:
     Type: String
     Default: codepipeline
@@ -43,7 +49,7 @@ Resources:
         Location: !Ref S3CodePipelineBucket
         Type: S3
       Name: !Ref CodePipelineName
-      RoleArn: !GetAtt CodePipelineIamRole.Arn
+      RoleArn: !GetAtt CodePipelineRole.Arn
       Stages:
         -
           Name: Source
@@ -58,7 +64,7 @@ Resources:
               OutputArtifacts:
                 - Name: hugo-source-files
               Configuration:
-                RepositoryName: !Ref GitRepository
+                RepositoryName: !GetAtt GitRepository.Name
                 BranchName: 'master'
                 PollForSourceChanges: true
         -
@@ -91,13 +97,13 @@ Resources:
             Value: !Ref S3WebsiteBucket
           - Name: WEBSITE_URL
             Value: !Ref WebsiteUrl
-      ServiceRole: !GetAtt CodeBuildIamRole.Arn
+      ServiceRole: !GetAtt CodeBuildRole.Arn
       Source:
         BuildSpec: buildspec.yml
         Type: CODEPIPELINE
       TimeoutInMinutes: 6
 
-  CodePipelineIamRole:
+  CodePipelineRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -178,7 +184,7 @@ Resources:
                     Effect: Allow
 
 
-  CodeBuildIamRole:
+  CodeBuildRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -205,7 +211,7 @@ Resources:
               - codecommit:GitPull
               Resource:
               - arn:aws:s3:::codepipeline-us-east-1-*
-              - arn:aws:codecommit:us-east-1:638088845137:hugo-blog
+              - !Sub "arn:aws:codecommit:us-east-1:638088845137:${CodeBuildName}"
             - Effect: Allow
               Action:
               - s3:ListBucketByTags
@@ -259,5 +265,5 @@ Resources:
               - logs:CreateLogStream
               - logs:PutLogEvents
               Resource:
-              - arn:aws:logs:us-east-1:638088845137:log-group:/aws/codebuild/hugo-blog
-              - arn:aws:logs:us-east-1:638088845137:log-group:/aws/codebuild/hugo-blog:*
+              - !Sub "arn:aws:logs:us-east-1:638088845137:log-group:/aws/codebuild/${CodeBuildName}"
+              - !Sub "arn:aws:logs:us-east-1:638088845137:log-group:/aws/codebuild/${CodeBuildName}:*"

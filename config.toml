@@ -1,3 +1,4 @@
+baseURL = ""
 languageCode = "en-us"
 title = "Felipe Alvarez's Blog"
 theme = "hugo-paper"

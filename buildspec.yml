@@ -10,7 +10,7 @@ phases:
       - aws --version
   pre_build:
     commands:
-      - ./hugo -v --buildDrafts --destination public/
+      - ./hugo -v --baseURL "" --buildDrafts --destination public/
   build:
     commands:
       - aws s3 sync --delete --acl public-read public/ s3://$S3_WEBSITE_BUCKET

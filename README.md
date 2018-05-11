@@ -4,7 +4,7 @@
 
 Using [Hugo]
 
-https://felipe1982.com
+http://felipe1982.com
 
 
 [Hugo]:https://gohugo.io

@@ -166,32 +166,10 @@ Resources:
                     Effect: Allow
                 -
                     Action:
-                        - 'elasticbeanstalk:*'
-                        - 'ec2:*'
-                        - 'elasticloadbalancing:*'
                         - 'autoscaling:*'
                         - 'cloudwatch:*'
                         - 's3:*'
                         - 'sns:*'
-                        - 'cloudformation:*'
-                        - 'rds:*'
-                        - 'sqs:*'
-                        - 'ecs:*'
-                        - 'iam:PassRole'
-                    Resource: '*'
-                    Effect: Allow
-                -
-                    Action:
-                        - 'cloudformation:CreateStack'
-                        - 'cloudformation:DeleteStack'
-                        - 'cloudformation:DescribeStacks'
-                        - 'cloudformation:UpdateStack'
-                        - 'cloudformation:CreateChangeSet'
-                        - 'cloudformation:DeleteChangeSet'
-                        - 'cloudformation:DescribeChangeSet'
-                        - 'cloudformation:ExecuteChangeSet'
-                        - 'cloudformation:SetStackPolicy'
-                        - 'cloudformation:ValidateTemplate'
                         - 'iam:PassRole'
                     Resource: '*'
                     Effect: Allow
@@ -233,42 +211,35 @@ Resources:
               - !Sub "arn:aws:codecommit:us-east-1:638088845137:${CodeBuildName}"
             - Effect: Allow
               Action:
-              - s3:ListBucketByTags
-              - s3:GetLifecycleConfiguration
-              - s3:GetBucketTagging
-              - s3:GetInventoryConfiguration
-              - s3:GetObjectVersionTagging
-              - s3:ListBucketVersions
-              - s3:GetBucketLogging
-              - s3:ListBucket
-              - s3:GetAccelerateConfiguration
-              - s3:GetBucketPolicy
-              - s3:GetObjectVersionTorrent
-              - s3:GetObjectAcl
-              - s3:GetBucketRequestPayment
-              - s3:GetObjectVersionAcl
-              - s3:GetObjectTagging
-              - s3:GetMetricsConfiguration
               - s3:DeleteObject
-              - s3:GetIpConfiguration
-              - s3:PutObjectAcl
-              - s3:ListBucketMultipartUploads
-              - s3:GetBucketWebsite
-              - s3:GetBucketVersioning
+              - s3:GetAccelerateConfiguration
               - s3:GetBucketAcl
-              - s3:GetBucketNotification
-              - s3:GetReplicationConfiguration
-              - s3:ListMultipartUploadParts
-              - s3:PutObject
-              - s3:GetObject
-              - s3:GetObjectTorrent
-              - s3:PutBucketWebsite
-              - s3:GetBucketCORS
-              - s3:GetAnalyticsConfiguration
-              - s3:PutBucketPolicy
-              - s3:GetObjectVersionForReplication
               - s3:GetBucketLocation
+              - s3:GetBucketLogging
+              - s3:GetBucketNotification
+              - s3:GetBucketPolicy
+              - s3:GetBucketTagging
+              - s3:GetBucketVersioning
+              - s3:GetBucketWebsite
+              - s3:GetIpConfiguration
+              - s3:GetLifecycleConfiguration
+              - s3:GetMetricsConfiguration
+              - s3:GetObject
+              - s3:GetObjectAcl
+              - s3:GetObjectTagging
               - s3:GetObjectVersion
+              - s3:GetObjectVersionAcl
+              - s3:GetObjectVersionForReplication
+              - s3:GetObjectVersionTagging
+              - s3:ListBucket
+              - s3:ListBucketByTags
+              - s3:ListBucketMultipartUploads
+              - s3:ListBucketVersions
+              - s3:ListMultipartUploadParts
+              - s3:PutBucketPolicy
+              - s3:PutBucketWebsite
+              - s3:PutObject
+              - s3:PutObjectAcl
               Resource:
               - !Sub "${S3WebsiteBucket.Arn}"
               - !Sub "${S3WebsiteBucket.Arn}/*"

@@ -1,0 +1,18 @@
+[
+  {
+    "ParameterKey" : "GitHubUser",
+    "ParameterValue" : "felipe1982"
+  },
+  {
+    "ParameterKey" : "GitHubToken",
+    "ParameterValue": "insertyourkeyhere"
+  },
+  {
+    "ParameterKey":"WebsiteUrl",
+    "ParameterValue":"felipe1982.com"
+  },
+  {
+    "ParameterKey":"S3WebsiteBucketName",
+    "ParameterValue":"felipe1982.com"
+  }
+]

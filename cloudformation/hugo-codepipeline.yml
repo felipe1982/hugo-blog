@@ -4,10 +4,6 @@ Parameters:
   GitHubUser:
     Type: String
 
-  GitHubToken:
-    Type: String
-    NoEcho: true
-
   RepositoryName:
     Type: String
     Default: hugo-blog
@@ -98,7 +94,7 @@ Resources:
                 Owner: !Ref GitHubUser
                 Repo: !Ref RepositoryName
                 Branch: !Ref GitHubBranch
-                OAuthToken: !Ref GitHubToken
+                OAuthToken: !Sub '{{resolve:secretsmanager:${AWS::StackName}/github-token::::}}'
         -
           Name: Build
           Actions:

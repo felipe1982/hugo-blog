@@ -4,7 +4,7 @@ phases:
   install:
     commands:
       - echo $PATH
-      - wget https://github.com/gohugoio/hugo/releases/download/v0.52/hugo_0.52_Linux-64bit.tar.gz
+      - wget https://github.com/gohugoio/hugo/releases/download/v0.57.2/hugo_0.57.2_Linux-32bit.tar.gz
       - tar -vxf hugo_0.52_Linux-64bit.tar.gz
       - ./hugo version
       - aws --version

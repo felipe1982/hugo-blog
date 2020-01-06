@@ -6,9 +6,5 @@
   {
     "ParameterKey":"WebsiteUrl",
     "ParameterValue":"felipe1982.com"
-  },
-  {
-    "ParameterKey":"S3WebsiteBucketName",
-    "ParameterValue":"felipe1982.com"
   }
 ]

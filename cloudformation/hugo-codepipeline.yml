@@ -18,13 +18,7 @@ Parameters:
 
   WebsiteUrl:
     Type: String
-    Default: myhugoblog.example.com
-    AllowedPattern: '^[a-z0-9.-]+[a-z0-9]+$'
-    ConstraintDescription: Must provide FQDN for website (eg. myhugoblog.example.com)
-
-  S3WebsiteBucketName:
-    Type: String
-    Default: myhugoblog.example.com
+    Default: felipe1982.com
     AllowedPattern: '^[a-z0-9.-]+[a-z0-9]+$'
     ConstraintDescription: Must provide FQDN for website (eg. myhugoblog.example.com)
 
@@ -44,30 +38,29 @@ Resources:
     Properties:
       BucketName: !Sub "${S3CodePipelineBucketName}-${AWS::Region}-${AWS::AccountId}"
 
-  S3WebsiteBucketPolicy:
-    Type: AWS::S3::BucketPolicy
+  CloudFrontOAI:
+    Type: "AWS::CloudFront::CloudFrontOriginAccessIdentity"
     Properties:
-      Bucket: !Ref S3WebsiteBucket
-      PolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          -
-            Sid: PublicReadForGetBucketObjects
-            Effect: Allow
-            Principal: '*'
-            Action:
-              - 's3:GetObject'
-            Resource:
-              - !Sub "${S3WebsiteBucket.Arn}/*"
+      CloudFrontOriginAccessIdentityConfig: #required
+        Comment: 'origin'
 
   S3WebsiteBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Ref S3WebsiteBucketName
-      AccessControl: "PublicRead"
-      WebsiteConfiguration:
-        IndexDocument: index.html
-        ErrorDocument: 404.html
+      AccessControl: Private
+
+  S3WebsiteBucketPolicy:
+    Type: "AWS::S3::BucketPolicy"
+    Properties:
+      Bucket: !Ref S3WebsiteBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              CanonicalUser: !GetAtt CloudFrontOAI.S3CanonicalUserId
+            Action: "s3:GetObject"
+            Resource: !Sub "${S3WebsiteBucket.Arn}/*"
 
   Pipeline:
     Type: AWS::CodePipeline::Pipeline
@@ -86,7 +79,7 @@ Resources:
               ActionTypeId:
                 Category: Source
                 Owner: ThirdParty
-                Version: 1
+                Version: '1'
                 Provider: GitHub
               OutputArtifacts:
                 - Name: hugo-source-files
@@ -103,7 +96,7 @@ Resources:
               ActionTypeId:
                 Category: Build
                 Owner: AWS
-                Version: 1
+                Version: '1'
                 Provider: CodeBuild
               InputArtifacts:
                 - Name: hugo-source-files
@@ -266,6 +259,22 @@ Resources:
               Resource:
               - !Sub "arn:aws:logs:${AWS::Region}:638088845137:log-group:/aws/codebuild/${CodeBuildName}"
               - !Sub "arn:aws:logs:${AWS::Region}:638088845137:log-group:/aws/codebuild/${CodeBuildName}:*"
+
+  CfDistribution:
+    Type: "AWS::CloudFront::Distribution"
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Origins:
+          - DomainName: !GetAtt S3WebsiteBucket.DomainName
+            Id: !Ref WebsiteUrl
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${CloudFrontOAI}"
+        DefaultCacheBehavior:
+          TargetOriginId: !Ref WebsiteUrl
+          ViewerProtocolPolicy: redirect-to-https
+          ForwardedValues:
+            QueryString: true
 
 Outputs:
   WebsiteURL:

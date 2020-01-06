@@ -5,12 +5,11 @@ SECRET_ID ?= github-token
 
 $(GITHUB_TOKEN_FILE):
 	@echo "Creating secrets file '$(GITHUB_TOKEN_FILE)'"
-	touch $(GITHUB_TOKEN_FILE)
-	chown $${USER}. $(GITHUB_TOKEN_FILE)
-	chmod 600 $(GITHUB_TOKEN_FILE)
+	TEMPFILE=$$(mktemp); \
 	TOKEN=red; \
 	read -s -r -p "Please paste your GitHub Personal Access Token: " TOKEN; echo; \
-	cat > $(GITHUB_TOKEN_FILE) <<<$$TOKEN
+	cat > $$TEMPFILE <<<$$TOKEN; \
+	install -o $$(id -nu) -g $$(id -ng) -m 600 $$TEMPFILE $(GITHUB_TOKEN_FILE)
 
 .PHONY: create-github-token
 create-github-token: $(GITHUB_TOKEN_FILE)

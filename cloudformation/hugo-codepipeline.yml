@@ -50,6 +50,7 @@ Resources:
       # AccessControl: Private
       WebsiteConfiguration:
         IndexDocument: index.html
+        ErrorDocument: 404.html
 
   S3WebsiteBucketPolicy:
     Type: "AWS::S3::BucketPolicy"

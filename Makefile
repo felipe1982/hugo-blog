@@ -37,3 +37,5 @@ create-stack update-stack:
 	--parameters file://parameters.json \
 	--profile $(AWS_PROFILE) \
 	--region $(AWS_DEFAULT_REGION)
+build-clean:
+	hugo --verbose --cleanDestinationDir --destination public

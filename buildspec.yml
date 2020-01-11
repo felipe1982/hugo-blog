@@ -10,7 +10,7 @@ phases:
       - aws --version
   pre_build:
     commands:
-      - ./hugo -v --baseURL "" --buildDrafts --destination public/
+      - ./hugo -v --baseURL "" --destination public/
   build:
     commands:
       - aws s3 sync --cache-control max-age=604800 --no-progress --delete public/ s3://$S3_WEBSITE_BUCKET

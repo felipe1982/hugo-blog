@@ -13,7 +13,7 @@ phases:
       - ./hugo -v --baseURL "" --buildDrafts --destination public/
   build:
     commands:
-      - aws s3 sync --no-progress --delete public/ s3://$S3_WEBSITE_BUCKET
+      - aws s3 sync --cache-control max-age=604800 --no-progress --delete public/ s3://$S3_WEBSITE_BUCKET
   post_build:
     commands:
       - ls -Fl public/

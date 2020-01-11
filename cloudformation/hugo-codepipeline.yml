@@ -47,7 +47,9 @@ Resources:
   S3WebsiteBucket:
     Type: AWS::S3::Bucket
     Properties:
-      AccessControl: Private
+      # AccessControl: Private
+      WebsiteConfiguration:
+        IndexDocument: index.html
 
   S3WebsiteBucketPolicy:
     Type: "AWS::S3::BucketPolicy"
@@ -57,8 +59,7 @@ Resources:
         Version: "2012-10-17"
         Statement:
           - Effect: Allow
-            Principal:
-              CanonicalUser: !GetAtt CloudFrontOAI.S3CanonicalUserId
+            Principal: '*'
             Action: "s3:GetObject"
             Resource: !Sub "${S3WebsiteBucket.Arn}/*"
 
@@ -182,7 +183,6 @@ Resources:
                     Resource: '*'
                     Effect: Allow
 
-
   CodeBuildRole:
     Type: AWS::IAM::Role
     Properties:
@@ -268,14 +268,26 @@ Resources:
         Origins:
           - DomainName: !GetAtt S3WebsiteBucket.DomainName
             Id: !Ref WebsiteUrl
-            S3OriginConfig:
-              OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${CloudFrontOAI}"
+            CustomOriginConfig:
+              OriginProtocolPolicy: match-viewer
         DefaultCacheBehavior:
           TargetOriginId: !Ref WebsiteUrl
           ViewerProtocolPolicy: redirect-to-https
           ForwardedValues:
-            QueryString: true
+            QueryString: false
 
 Outputs:
-  WebsiteURL:
+  Bucket:
+    Value: !Ref S3WebsiteBucket
+  BucketWebsiteUrl:
     Value: !GetAtt S3WebsiteBucket.WebsiteURL
+  BucketDomainName:
+    Value: !GetAtt S3WebsiteBucket.DomainName
+  BucketRegionalDomainName:
+    Value: !GetAtt S3WebsiteBucket.RegionalDomainName
+  BucketDualStack:
+    Value: !GetAtt S3WebsiteBucket.DualStackDomainName
+  DistributionUrl:
+    Value: !Sub http://${CfDistribution.DomainName}
+  DistributionUrlSecure:
+    Value: !Sub https://${CfDistribution.DomainName}

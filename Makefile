@@ -11,7 +11,6 @@ $(GITHUB_TOKEN_FILE):
 	cat > $$TEMPFILE <<<$$TOKEN; \
 	install -o $$(id -nu) -g $$(id -ng) -m 600 $$TEMPFILE $(GITHUB_TOKEN_FILE)
 
-.PHONY: create-github-token
 create-github-token: $(GITHUB_TOKEN_FILE)
 	aws secretsmanager create-secret \
 	--name "$(STACK_NAME)/$(SECRET_ID)" \
@@ -20,7 +19,6 @@ create-github-token: $(GITHUB_TOKEN_FILE)
 	--profile $(AWS_PROFILE) \
 	--region $(AWS_DEFAULT_REGION)
 
-.PHONY: update-github-token
 update-github-token: $(GITHUB_TOKEN_FILE)
 	aws secretsmanager put-secret-value \
 	--secret-id "$(STACK_NAME)/$(SECRET_ID)" \
@@ -28,7 +26,6 @@ update-github-token: $(GITHUB_TOKEN_FILE)
 	--profile $(AWS_PROFILE) \
 	--region $(AWS_DEFAULT_REGION)
 
-.PHONY: create-stack update-stack
 create-stack update-stack:
 	aws cloudformation $@ \
 	--stack-name $(STACK_NAME) \
@@ -37,5 +34,8 @@ create-stack update-stack:
 	--parameters file://parameters.json \
 	--profile $(AWS_PROFILE) \
 	--region $(AWS_DEFAULT_REGION)
+
 build-clean:
 	hugo --verbose --cleanDestinationDir --destination public
+
+.PHONY: all bucket sync create-stack update-stack create-github-token update-github-token

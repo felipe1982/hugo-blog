@@ -16,11 +16,11 @@ Parameters:
     Type: String
     Default: hugo-blog
 
-  WebsiteUrl:
+  OriginName:
     Type: String
-    Default: felipe1982.com
+    Default: com-felipe1982
     AllowedPattern: '^[a-z0-9.-]+[a-z0-9]+$'
-    ConstraintDescription: Must provide FQDN for website (eg. myhugoblog.example.com)
+    ConstraintDescription: Must provide OriginName for website (eg. myhugoblog.example.com)
 
   S3CodePipelineBucketName:
     Type: String
@@ -118,8 +118,6 @@ Resources:
         EnvironmentVariables:
           - Name: S3_WEBSITE_BUCKET
             Value: !Ref S3WebsiteBucket
-          - Name: WEBSITE_URL
-            Value: !Ref WebsiteUrl
       ServiceRole: !GetAtt CodeBuildRole.Arn
       Source:
         BuildSpec: buildspec.yml
@@ -268,19 +266,23 @@ Resources:
         Enabled: true
         Origins:
           - DomainName: !GetAtt S3WebsiteBucket.DomainName
-            Id: !Ref WebsiteUrl
+            Id: !Ref OriginName
+            OriginCustomHeaders:
+              - HeaderName: X-com-felipe1982-origin-header
+                HeaderValue: 'BUr8cf*dEYQCfGcretGf'
             CustomOriginConfig:
               OriginProtocolPolicy: match-viewer
+        DefaultRootObject: index.html
         DefaultCacheBehavior:
-          TargetOriginId: !Ref WebsiteUrl
-          ViewerProtocolPolicy: redirect-to-https
+          TargetOriginId: !Ref OriginName
+          # ViewerProtocolPolicy: redirect-to-https
           ForwardedValues:
             QueryString: false
 
 Outputs:
   Bucket:
     Value: !Ref S3WebsiteBucket
-  BucketWebsiteUrl:
+  BucketWebsiteURL:
     Value: !GetAtt S3WebsiteBucket.WebsiteURL
   BucketDomainName:
     Value: !GetAtt S3WebsiteBucket.DomainName

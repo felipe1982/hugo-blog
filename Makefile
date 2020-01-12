@@ -38,4 +38,19 @@ create-stack update-stack:
 build-clean:
 	hugo --verbose --cleanDestinationDir --destination public
 
+deploy:
+	aws --region us-east-1 --profile myuser \
+	cloudformation update-stack --stack-name hugo-blog --capabilities CAPABILITY_IAM \
+	--template-body file://cloudformation/hugo-codepipeline.yml \
+	--parameters ParameterKey=GitHubUser,ParameterValue=felipe1982 \
+	ParameterKey=OriginName,ParameterValue=com-felipe1982
+
+bucket:
+$(eval BUCKET=$(shell aws --profile myuser cloudformation describe-stacks  --stack-name hugo-blog --query 'Stacks[*].Outputs[?OutputKey==`Bucket`].OutputValue' --output text))
+
+sync: bucket
+	aws --profile myuser s3 sync --no-progress --storage-class STANDARD_IA --delete public/ s3://$(BUCKET)
+
+all: deploy build-clean bucket sync
+
 .PHONY: all bucket sync create-stack update-stack create-github-token update-github-token

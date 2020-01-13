@@ -259,25 +259,24 @@ Resources:
               - !Sub "arn:aws:logs:${AWS::Region}:638088845137:log-group:/aws/codebuild/${CodeBuildName}"
               - !Sub "arn:aws:logs:${AWS::Region}:638088845137:log-group:/aws/codebuild/${CodeBuildName}:*"
 
-#  CfDistribution:
-#    Type: "AWS::CloudFront::Distribution"
-#    Properties:
-#      DistributionConfig:
-#        Enabled: true
-#        Origins:
-#          - DomainName: !GetAtt S3WebsiteBucket.DomainName
-#            Id: !Ref OriginName
-#            OriginCustomHeaders:
-#              - HeaderName: X-com-felipe1982-origin-header
-#                HeaderValue: 'BUr8cf*dEYQCfGcretGf'
-#            CustomOriginConfig:
-#              OriginProtocolPolicy: match-viewer
-#        DefaultRootObject: index.html
-#        DefaultCacheBehavior:
-#          TargetOriginId: !Ref OriginName
-#          # ViewerProtocolPolicy: redirect-to-https
-#          ForwardedValues:
-#            QueryString: false
+  CfDistribution:
+    Type: "AWS::CloudFront::Distribution"
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Origins:
+            #  Fn::GetAtt Bucket.DomainName returns http://example.com. Split at
+            #  "//" and select second elemet to return only the FQDN portion.
+          - DomainName: !Select [1, !Split ["//", !GetAtt S3WebsiteBucket.WebsiteURL]]
+            Id: !Ref OriginName
+            CustomOriginConfig:
+              OriginProtocolPolicy: http-only
+        DefaultRootObject: index.html
+        DefaultCacheBehavior:
+          TargetOriginId: !Ref OriginName
+          ViewerProtocolPolicy: allow-all
+          ForwardedValues:
+            QueryString: false
 
 Outputs:
   Bucket:
@@ -290,7 +289,7 @@ Outputs:
     Value: !GetAtt S3WebsiteBucket.RegionalDomainName
   BucketDualStack:
     Value: !GetAtt S3WebsiteBucket.DualStackDomainName
-#  DistributionUrl:
-#    Value: !Sub http://${CfDistribution.DomainName}
-#  DistributionUrlSecure:
-#    Value: !Sub https://${CfDistribution.DomainName}
+  DistributionUrl:
+    Value: !Sub http://${CfDistribution.DomainName}
+  DistributionUrlSecure:
+    Value: !Sub https://${CfDistribution.DomainName}

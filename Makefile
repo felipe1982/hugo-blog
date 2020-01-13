@@ -24,7 +24,7 @@ update-github-token: $(GITHUB_TOKEN_FILE)
 	--secret-string "file://$(GITHUB_TOKEN_FILE)" \
 	--region $(AWS_DEFAULT_REGION)
 
-all: create-stack update-stack wait-create-stack wait-update-stack deploy build-clean bucket sync
+all: create-stack update-stack wait-create-stack wait-update-stack build-clean bucket sync
 
 create-stack update-stack:
 	aws cloudformation $@ \
@@ -43,14 +43,7 @@ wait-update-stack:
 	aws cloudformation wait stack-update-complete --stack-name $(STACK_NAME)
 
 build-clean:
-	hugo --debug --verbose --cleanDestinationDir --destination public
-
-deploy:
-	aws --region us-east-1  \
-	cloudformation update-stack --stack-name hugo-blog --capabilities CAPABILITY_IAM \
-	--template-body file://cloudformation/hugo-codepipeline.yml \
-	--parameters ParameterKey=GitHubUser,ParameterValue=felipe1982 \
-	ParameterKey=OriginName,ParameterValue=com-felipe1982
+	hugo --debug --verbose --cleanDestinationDir --destination public | tee hugo-build.log
 
 sync:
 	BUCKET=$$(aws cloudformation describe-stacks --stack-name hugo-blog --query 'Stacks[*].Outputs[?OutputKey==`Bucket`].OutputValue' --output text); \

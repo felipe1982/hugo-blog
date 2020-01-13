@@ -1,5 +1,5 @@
 # baseURL = ""
 languageCode = "en-us"
 title = "Felipe Alvarez's Blog"
-theme = "paper"
+theme = "hugo-paper"
 uglyurls = "true"

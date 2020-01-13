@@ -2,18 +2,20 @@
 version: 0.2
 phases:
   install:
+    runtime-versions:
+      python: 3.8
     commands:
       - echo $PATH
-      - wget https://github.com/gohugoio/hugo/releases/download/v0.52/hugo_0.52_Linux-64bit.tar.gz
-      - tar -vxf hugo_0.52_Linux-64bit.tar.gz
+      - wget --no-verbose https://github.com/gohugoio/hugo/releases/download/v0.62.2/hugo_0.62.2_Linux-64bit.tar.gz -O hugo.tgz
+      - tar -vxf hugo.tgz
       - ./hugo version
       - aws --version
   pre_build:
     commands:
-      - ./hugo -v --baseURL "" --buildDrafts --destination public/
+      - make hugo PATH="$PWD:$PATH"
   build:
     commands:
-      - aws s3 sync --delete public/ s3://$S3_WEBSITE_BUCKET
+      - make sync S3_WEBSITE_BUCKET=$S3_WEBSITE_BUCKET
   post_build:
     commands:
       - ls -Fl public/

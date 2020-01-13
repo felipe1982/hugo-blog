@@ -1,7 +1,7 @@
 STACK_NAME ?= hugo-blog
-AWS_PROFILE ?= myuser
 GITHUB_TOKEN_FILE ?= github-token.txt
 SECRET_ID ?= github-token
+AWS_DEFAULT_REGION ?= us-east-1
 
 $(GITHUB_TOKEN_FILE):
 	@echo "Creating secrets file '$(GITHUB_TOKEN_FILE)'"
@@ -11,29 +11,53 @@ $(GITHUB_TOKEN_FILE):
 	cat > $$TEMPFILE <<<$$TOKEN; \
 	install -o $$(id -nu) -g $$(id -ng) -m 600 $$TEMPFILE $(GITHUB_TOKEN_FILE)
 
-.PHONY: create-github-token
 create-github-token: $(GITHUB_TOKEN_FILE)
 	aws secretsmanager create-secret \
 	--name "$(STACK_NAME)/$(SECRET_ID)" \
 	--description "github token for $(STACK_NAME)" \
 	--secret-string file://github-token.txt \
-	--profile $(AWS_PROFILE) \
 	--region $(AWS_DEFAULT_REGION)
 
-.PHONY: update-github-token
 update-github-token: $(GITHUB_TOKEN_FILE)
 	aws secretsmanager put-secret-value \
 	--secret-id "$(STACK_NAME)/$(SECRET_ID)" \
 	--secret-string "file://$(GITHUB_TOKEN_FILE)" \
-	--profile $(AWS_PROFILE) \
 	--region $(AWS_DEFAULT_REGION)
 
-.PHONY: create-stack update-stack
-create-stack update-stack:
+all: validate-template create-stack update-stack wait-create-stack wait-update-stack build-clean hugo bucket sync
+
+validate-template:
+	aws cloudformation validate-template --template-body file://cloudformation/hugo-codepipeline.yml
+
+create-stack update-stack: validate-template
 	aws cloudformation $@ \
 	--stack-name $(STACK_NAME) \
 	--capabilities CAPABILITY_IAM \
 	--template-body file://cloudformation/hugo-codepipeline.yml \
 	--parameters file://parameters.json \
-	--profile $(AWS_PROFILE) \
-	--region $(AWS_DEFAULT_REGION)
+	--region $(AWS_DEFAULT_REGION);
+	$(MAKE) wait-$@
+
+wait-create-stack:
+	aws cloudformation wait stack-create-complete \
+	--stack-name $(STACK_NAME)
+
+wait-update-stack:
+	aws cloudformation wait stack-update-complete --stack-name $(STACK_NAME)
+
+build-clean hugo:
+	hugo --debug --verbose --cleanDestinationDir --destination public | tee hugo-build.log
+
+server:
+	hugo server --debug --verbose
+
+bucket:
+	@echo 'Call    eval `make bucket`' >&2
+	@echo export S3_WEBSITE_BUCKET="$$(aws cloudformation describe-stacks --stack-name hugo-blog --query 'Stacks[*].Outputs[?OutputKey==`Bucket`].OutputValue' --output text)"
+
+sync:
+	# export S3_WEBSITE_BUCKET
+	aws s3 sync --no-progress --storage-class STANDARD --delete --cache-control max-age=0 \
+	public/ s3://$${S3_WEBSITE_BUCKET?} | tee aws-sync.log
+
+.PHONY: all build-clean hugo bucket sync server create-stack update-stack wait-create-stack wait-update-stack validate-template create-github-token update-github-token

@@ -16,11 +16,11 @@ Parameters:
     Type: String
     Default: hugo-blog
 
-  WebsiteUrl:
+  OriginName:
     Type: String
-    Default: felipe1982.com
+    Default: com-felipe1982
     AllowedPattern: '^[a-z0-9.-]+[a-z0-9]+$'
-    ConstraintDescription: Must provide FQDN for website (eg. myhugoblog.example.com)
+    ConstraintDescription: Must provide OriginName for website (eg. myhugoblog.example.com)
 
   S3CodePipelineBucketName:
     Type: String
@@ -47,7 +47,10 @@ Resources:
   S3WebsiteBucket:
     Type: AWS::S3::Bucket
     Properties:
-      AccessControl: Private
+      # AccessControl: Private
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: 404.html
 
   S3WebsiteBucketPolicy:
     Type: "AWS::S3::BucketPolicy"
@@ -57,8 +60,7 @@ Resources:
         Version: "2012-10-17"
         Statement:
           - Effect: Allow
-            Principal:
-              CanonicalUser: !GetAtt CloudFrontOAI.S3CanonicalUserId
+            Principal: '*'
             Action: "s3:GetObject"
             Resource: !Sub "${S3WebsiteBucket.Arn}/*"
 
@@ -75,7 +77,7 @@ Resources:
           Name: Source
           Actions:
             -
-              Name: SourceAction
+              Name: !Ref GitHubBranch
               ActionTypeId:
                 Category: Source
                 Owner: ThirdParty
@@ -92,7 +94,7 @@ Resources:
           Name: Build
           Actions:
             -
-              Name: BuildAction
+              Name: Hugo
               ActionTypeId:
                 Category: Build
                 Owner: AWS
@@ -112,12 +114,10 @@ Resources:
       Environment:
         Type: LINUX_CONTAINER
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/python:3.6.5
+        Image: aws/codebuild/amazonlinux2-x86_64-standard:2.0
         EnvironmentVariables:
           - Name: S3_WEBSITE_BUCKET
             Value: !Ref S3WebsiteBucket
-          - Name: WEBSITE_URL
-            Value: !Ref WebsiteUrl
       ServiceRole: !GetAtt CodeBuildRole.Arn
       Source:
         BuildSpec: buildspec.yml
@@ -181,7 +181,6 @@ Resources:
                         - 'codebuild:StartBuild'
                     Resource: '*'
                     Effect: Allow
-
 
   CodeBuildRole:
     Type: AWS::IAM::Role
@@ -266,16 +265,31 @@ Resources:
       DistributionConfig:
         Enabled: true
         Origins:
-          - DomainName: !GetAtt S3WebsiteBucket.DomainName
-            Id: !Ref WebsiteUrl
-            S3OriginConfig:
-              OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${CloudFrontOAI}"
+            #  Fn::GetAtt Bucket.DomainName returns http://example.com. Split at
+            #  "//" and select second elemet to return only the FQDN portion.
+          - DomainName: !Select [1, !Split ["//", !GetAtt S3WebsiteBucket.WebsiteURL]]
+            Id: !Ref OriginName
+            CustomOriginConfig:
+              OriginProtocolPolicy: http-only
+        DefaultRootObject: index.html
         DefaultCacheBehavior:
-          TargetOriginId: !Ref WebsiteUrl
-          ViewerProtocolPolicy: redirect-to-https
+          TargetOriginId: !Ref OriginName
+          ViewerProtocolPolicy: allow-all
           ForwardedValues:
-            QueryString: true
+            QueryString: false
 
 Outputs:
-  WebsiteURL:
+  Bucket:
+    Value: !Ref S3WebsiteBucket
+  BucketWebsiteURL:
     Value: !GetAtt S3WebsiteBucket.WebsiteURL
+  BucketDomainName:
+    Value: !GetAtt S3WebsiteBucket.DomainName
+  BucketRegionalDomainName:
+    Value: !GetAtt S3WebsiteBucket.RegionalDomainName
+  BucketDualStack:
+    Value: !GetAtt S3WebsiteBucket.DualStackDomainName
+  DistributionUrl:
+    Value: !Sub http://${CfDistribution.DomainName}
+  DistributionUrlSecure:
+    Value: !Sub https://${CfDistribution.DomainName}

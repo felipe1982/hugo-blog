@@ -48,9 +48,16 @@ wait-update-stack:
 build-clean hugo:
 	hugo --debug --verbose --cleanDestinationDir --destination public | tee hugo-build.log
 
+server:
+	hugo server --debug --verbose
+
+bucket:
+	@echo 'Call    eval `make bucket`' >&2
+	@echo export S3_WEBSITE_BUCKET="$$(aws cloudformation describe-stacks --stack-name hugo-blog --query 'Stacks[*].Outputs[?OutputKey==`Bucket`].OutputValue' --output text)"
+
 sync:
-	BUCKET=$$(aws cloudformation describe-stacks --stack-name hugo-blog --query 'Stacks[*].Outputs[?OutputKey==`Bucket`].OutputValue' --output text); \
+	# export S3_WEBSITE_BUCKET
 	aws s3 sync --no-progress --storage-class STANDARD --delete --cache-control max-age=0 \
-	public/ s3://$${BUCKET?} | tee aws-sync.log
+	public/ s3://$${S3_WEBSITE_BUCKET?} | tee aws-sync.log
 
 .PHONY: all bucket sync create-stack update-stack create-github-token update-github-token

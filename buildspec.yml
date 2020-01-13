@@ -10,7 +10,7 @@ phases:
       - aws --version
   pre_build:
     commands:
-      - make hugo
+      - make hugo PATH="$PWD:$PATH"
   build:
     commands:
       - make sync S3_WEBSITE_BUCKET=$S3_WEBSITE_BUCKET

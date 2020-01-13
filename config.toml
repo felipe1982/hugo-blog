@@ -1,5 +1,4 @@
 # baseURL = ""
-languageCode = "en-us"
 title = "Felipe Alvarez's Blog"
-theme = "paper"
-uglyurls = "true"
+# uglyurls = "true"
+theme = "pixyll"

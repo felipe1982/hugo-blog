@@ -43,7 +43,7 @@ wait-update-stack:
 	aws cloudformation wait stack-update-complete --stack-name $(STACK_NAME)
 
 build-clean:
-	hugo --verbose --cleanDestinationDir --destination public
+	hugo --debug --verbose --cleanDestinationDir --destination public
 
 deploy:
 	aws --region us-east-1  \
@@ -53,9 +53,8 @@ deploy:
 	ParameterKey=OriginName,ParameterValue=com-felipe1982
 
 sync:
-	BUCKET=$$(aws  cloudformation describe-stacks \
-	--stack-name hugo-blog --query 'Stacks[*].Outputs[?OutputKey==`Bucket`].OutputValue' --output text); \
-	aws  s3 sync --no-progress --storage-class STANDARD_IA --delete --cache-control max-age=0 \
-	public/ s3://$(BUCKET)
+	BUCKET=$$(aws cloudformation describe-stacks --stack-name hugo-blog --query 'Stacks[*].Outputs[?OutputKey==`Bucket`].OutputValue' --output text); \
+	aws s3 sync --no-progress --storage-class ONEZONE_IA --delete --cache-control max-age=0 \
+	public/ s3://$${BUCKET?} | tee aws-sync.log
 
 .PHONY: all bucket sync create-stack update-stack create-github-token update-github-token

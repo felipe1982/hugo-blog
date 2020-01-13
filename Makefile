@@ -60,4 +60,4 @@ sync:
 	aws s3 sync --no-progress --storage-class STANDARD --delete --cache-control max-age=0 \
 	public/ s3://$${S3_WEBSITE_BUCKET?} | tee aws-sync.log
 
-.PHONY: all bucket sync create-stack update-stack create-github-token update-github-token
+.PHONY: all build-clean hugo bucket sync server create-stack update-stack wait-create-stack wait-update-stack validate-template create-github-token update-github-token

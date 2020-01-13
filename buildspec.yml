@@ -2,6 +2,8 @@
 version: 0.2
 phases:
   install:
+    runtime-versions:
+      python: 3.7
     commands:
       - echo $PATH
       - wget --no-verbose https://github.com/gohugoio/hugo/releases/download/v0.62.2/hugo_0.62.2_Linux-64bit.tar.gz -O hugo.tgz

@@ -24,7 +24,7 @@ update-github-token: $(GITHUB_TOKEN_FILE)
 	--secret-string "file://$(GITHUB_TOKEN_FILE)" \
 	--region $(AWS_DEFAULT_REGION)
 
-all: validate-template create-stack update-stack wait-create-stack wait-update-stack build-clean bucket sync
+all: validate-template create-stack update-stack wait-create-stack wait-update-stack build-clean hugo bucket sync
 
 validate-template:
 	aws cloudformation validate-template --template-body file://cloudformation/hugo-codepipeline.yml
@@ -45,7 +45,7 @@ wait-create-stack:
 wait-update-stack:
 	aws cloudformation wait stack-update-complete --stack-name $(STACK_NAME)
 
-build-clean:
+build-clean hugo:
 	hugo --debug --verbose --cleanDestinationDir --destination public | tee hugo-build.log
 
 sync:

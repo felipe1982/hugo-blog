@@ -278,6 +278,34 @@ Resources:
           ForwardedValues:
             QueryString: false
 
+  DnsRecordSetGroup:
+    Type: "AWS::Route53::RecordSetGroup"
+    Properties:
+      # Comment: String
+      HostedZoneId:  Z1JYG3XEZZ05O1
+      # HostedZoneName: String
+      RecordSets:
+        - Name: felipe1982.com.
+          Type: AAAA
+          AliasTarget:
+            DNSName: !GetAtt CfDistribution.DomainName
+            HostedZoneId: Z2FDTNDATAQYW2
+        - Name: felipe1982.com.
+          Type: A
+          AliasTarget:
+            DNSName: !GetAtt CfDistribution.DomainName
+            HostedZoneId: Z2FDTNDATAQYW2
+        - Name: www.felipe1982.com.
+          Type: AAAA
+          AliasTarget:
+            DNSName: !GetAtt CfDistribution.DomainName
+            HostedZoneId: Z2FDTNDATAQYW2
+        - Name: www.felipe1982.com.
+          Type: A
+          AliasTarget:
+            DNSName: !GetAtt CfDistribution.DomainName
+            HostedZoneId: Z2FDTNDATAQYW2
+
 Outputs:
   Bucket:
     Value: !Ref S3WebsiteBucket

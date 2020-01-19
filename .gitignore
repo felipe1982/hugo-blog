@@ -1,2 +1,4 @@
 public
 github-token.txt
+*.log
+hugo

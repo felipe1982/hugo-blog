@@ -1,0 +1,24 @@
+---
+Parameters:
+  CertificateDnsName:
+    Type: String
+    Default: felipe1982.com
+  RootDomainName:
+    Type: String
+    Default: felipe1982.com
+  SubjectAlternativeNames:
+    Type: String
+    Default: www.felipe1982.com
+Resources:
+  Certificate:
+    Type: "AWS::CertificateManager::Certificate"
+    Properties:
+      DomainName: !Ref CertificateDnsName
+      DomainValidationOptions:
+        - DomainName: !Ref RootDomainName
+          ValidationDomain: !Ref RootDomainName
+      SubjectAlternativeNames:
+        - !Ref SubjectAlternativeNames
+      # Tags:
+        # - Tag
+      ValidationMethod: DNS

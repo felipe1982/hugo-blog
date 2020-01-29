@@ -263,6 +263,9 @@ Resources:
     Type: "AWS::CloudFront::Distribution"
     Properties:
       DistributionConfig:
+        Aliases:
+          - felipe1982.com.
+          - www.felipe1982.com.
         Enabled: true
         Origins:
             #  Fn::GetAtt Bucket.DomainName returns http://example.com. Split at

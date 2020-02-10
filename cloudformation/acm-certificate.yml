@@ -3,22 +3,30 @@ Parameters:
   CertificateDnsName:
     Type: String
     Default: felipe1982.com
-  RootDomainName:
+  HostedZoneName:
     Type: String
     Default: felipe1982.com
+  HostedZoneId:
+    Type: String
+    Default: Z1JYG3XEZZ05O1
   SubjectAlternativeNames:
     Type: String
     Default: www.felipe1982.com
 Resources:
-  Certificate:
-    Type: "AWS::CertificateManager::Certificate"
+  # Certificate:
+  #   Type: "AWS::CertificateManager::Certificate"
+  #   Properties:
+  #     DomainName: !Ref CertificateDnsName
+  #     SubjectAlternativeNames:
+  #       - !Ref SubjectAlternativeNames
+  #     # Tags:
+  #       # - Tag
+  #     ValidationMethod: DNS
+  Route53ResourceRecord:
+    Type: "AWS::CloudFormation::CustomResource"
     Properties:
-      DomainName: !Ref CertificateDnsName
-      DomainValidationOptions:
-        - DomainName: !Ref RootDomainName
-          ValidationDomain: !Ref RootDomainName
-      SubjectAlternativeNames:
-        - !Ref SubjectAlternativeNames
-      # Tags:
-        # - Tag
-      ValidationMethod: DNS
+      ServiceToken: arn:aws:lambda:us-east-1:638088845137:function:acm-dns-validate
+      HostedZoneId: !Ref HostedZoneId
+      Name: boto3.felipe1982.com
+      Type: "CNAME"
+      Value: "aws.amazon.com"

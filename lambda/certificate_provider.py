@@ -5,11 +5,12 @@ from pprint import pprint
 acm_client = boto3.client('acm')
 
 def request_certificate(DomainName, SubjectAlternativeNames):
-    acm_client.request_certificate(
+    response = acm_client.request_certificate(
         DomainName=DomainName,
         SubjectAlternativeNames=SubjectAlternativeNames,
         ValidationMethod='DNS'
     )
+    return response['CertificateArn']
 
 def get_certificate_cname_value(arn):
     try:

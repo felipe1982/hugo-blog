@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import boto3
+from pprint import pprint
 
 acm_client = boto3.client('acm')
 
@@ -21,4 +22,4 @@ def get_certificate_cname_value(arn):
         raise
     return cname_list
 # request_certificate('boto3.felipe1982.com', ['www.felipe1982.com'])
-print(get_certificate_cname_value('arn:aws:acm:us-east-1:638088845137:certificate/def5f55f-13b6-49dd-9d85-477d19f275ef'))
+pprint(get_certificate_cname_value('arn:aws:acm:us-east-1:638088845137:certificate/def5f55f-13b6-49dd-9d85-477d19f275ef'))

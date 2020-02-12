@@ -2,3 +2,4 @@ public
 github-token.txt
 *.log
 hugo
+packaged_*

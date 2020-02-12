@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  Providing Lambda-backed Custom Resources for Amazon Certificate Manager
+
+Resources:
+  CertificateProvider:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Code: ../lambda
+      Description: String
+      Handler: certificate_provider.handler #required
+      MemorySize: 128
+      Role: !GetAtt CertificateProviderLambdaRole.Arn #required
+      Runtime: python3.8 #required
+      Timeout: 5
+  CertificateProviderLambdaRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+              - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: Request ACM Certificates
+      # ManagedPolicyArns:
+      #   - String
+      Path: /service-role/
+      Policies:
+        - PolicyName: RequestAcmCertificates
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'acm:DescribeCertificate'
+                  - 'acm:GetCertificate'
+                  - 'acm:ListCertificates'
+                  - 'acm:RequestCertificate'
+                Resource: '*'

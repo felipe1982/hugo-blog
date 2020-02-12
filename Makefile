@@ -2,6 +2,9 @@ STACK_NAME ?= hugo-blog
 GITHUB_TOKEN_FILE ?= github-token.txt
 SECRET_ID ?= github-token
 AWS_DEFAULT_REGION ?= us-east-1
+TEMPLATE_DIR := cloudformation
+TEMPLATE := lambda-functions.yml
+TEMPLATE_OUTPUT := packaged_$(TEMPLATE)
 
 $(GITHUB_TOKEN_FILE):
 	@echo "Creating secrets file '$(GITHUB_TOKEN_FILE)'"
@@ -60,4 +63,16 @@ sync:
 	aws s3 sync --no-progress --storage-class STANDARD --delete --cache-control max-age=0 \
 	public/ s3://$${S3_WEBSITE_BUCKET?} | tee aws-sync.log
 
-.PHONY: all build-clean hugo bucket sync server create-stack update-stack wait-create-stack wait-update-stack validate-template create-github-token update-github-token
+lambda: package lint deploy
+
+package $(TEMPLATE_OUTPUT):
+	aws cloudformation package --template-file $(TEMPLATE_DIR)/$(TEMPLATE)  --output-template-file $(TEMPLATE_OUTPUT) --s3-bucket cfn-638088845137-us-east-1
+lint: $(TEMPLATE_OUTPUT)
+	cfn-lint --info --template $(TEMPLATE_OUTPUT)
+deploy: $(TEMPLATE_OUTPUT)
+	aws cloudformation deploy --template-file $(TEMPLATE_OUTPUT) --stack-name lambda-functions --capabilities CAPABILITY_IAM
+clean:
+	-rm $(TEMPLATE_OUTPUT)
+
+.PHONY: all build-clean hugo bucket sync server create-stack update-stack wait-create-stack wait-update-stack validate-template create-github-token update-github-token lint clean
+

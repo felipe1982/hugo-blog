@@ -63,16 +63,19 @@ sync:
 	aws s3 sync --no-progress --storage-class STANDARD --delete --cache-control max-age=0 \
 	public/ s3://$${S3_WEBSITE_BUCKET?} | tee aws-sync.log
 
-lambda: package lint deploy
+lambda: clean package lint deploy
 
 package $(TEMPLATE_OUTPUT):
 	aws cloudformation package --template-file $(TEMPLATE_DIR)/$(TEMPLATE)  --output-template-file $(TEMPLATE_OUTPUT) --s3-bucket cfn-638088845137-us-east-1
 lint: $(TEMPLATE_OUTPUT)
 	cfn-lint --info --template $(TEMPLATE_OUTPUT)
 deploy: $(TEMPLATE_OUTPUT)
-	aws cloudformation deploy --template-file $(TEMPLATE_OUTPUT) --stack-name lambda-functions --capabilities CAPABILITY_IAM
+	aws cloudformation deploy --template-file $(TEMPLATE_OUTPUT) --stack-name $(LAMBDA_STACK_NAME) --capabilities CAPABILITY_IAM
 clean:
 	-rm $(TEMPLATE_OUTPUT)
-
-.PHONY: all build-clean hugo bucket sync server create-stack update-stack wait-create-stack wait-update-stack validate-template create-github-token update-github-token lint clean
-
+delete:
+	aws cloudformation delete-stack --stack-name lambda-functions
+.PHONY: all build-clean hugo bucket sync server create-stack \
+	update-stack wait-create-stack wait-update-stack \
+	validate-template create-github-token update-github-token \
+	lint clean delete

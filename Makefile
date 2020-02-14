@@ -74,7 +74,7 @@ deploy: $(TEMPLATE_OUTPUT)
 clean:
 	-rm $(TEMPLATE_OUTPUT)
 delete:
-	aws cloudformation delete-stack --stack-name lambda-functions
+	aws cloudformation delete-stack --stack-name $(LAMBDA_STACK_NAME)
 .PHONY: all build-clean hugo bucket sync server create-stack \
 	update-stack wait-create-stack wait-update-stack \
 	validate-template create-github-token update-github-token \

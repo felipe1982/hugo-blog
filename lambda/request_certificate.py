@@ -21,6 +21,6 @@ def request_certificate(DomainName, SubjectAlternativeNames=None):
             DomainName=DomainName,
             ValidationMethod='DNS'
         )
-    return {"CertificateArn" : response['CertificateArn']}
+    return {"Arn" : response['CertificateArn']}
 def handler(event, context):
     helper(event, context)

@@ -9,18 +9,25 @@ def create(event, context):
     SubjectAlternativeNames = event['ResourceProperties'].get('SubjectAlternativeNames', None)
     CertificateArn = request_certificate(DomainName, SubjectAlternativeNames)
     helper.Data.update(CertificateArn)
+    return None
 def request_certificate(DomainName, SubjectAlternativeNames=None):
     if SubjectAlternativeNames:
         response = acm_client.request_certificate(
             DomainName=DomainName,
+            ValidationMethod='DNS',
             SubjectAlternativeNames=SubjectAlternativeNames,
-            ValidationMethod='DNS'
+            IdempotencyToken=DomainName.replace('.','')
         )
     else:
         response = acm_client.request_certificate(
             DomainName=DomainName,
-            ValidationMethod='DNS'
+            ValidationMethod='DNS',
+            IdempotencyToken=DomainName.replace('.','')
         )
     return {"Arn" : response['CertificateArn']}
+@helper.delete
+@helper.update
+def noop(event, context):
+    return None
 def handler(event, context):
     helper(event, context)

@@ -13,6 +13,7 @@ def resource_record_exists(HostedZoneId, StartRecordName, StartRecordType):
     )
     return response['ResourceRecordSets'][0]['Name'] == StartRecordName
 @helper.create
+@helper.update
 def create(event, context):
     HostedZoneId = event['ResourceProperties']['HostedZoneId']
     Name = event['ResourceProperties']['Name']

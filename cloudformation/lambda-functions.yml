@@ -4,15 +4,28 @@ Description: >-
   Amazon Certificate Manager
 
 Resources:
-  UpdateCname:
-    Type: "Custom::UpdateCname"
+  RequestCertificateFunction:
+    Type: "AWS::Lambda::Function"
     Properties:
-      ServiceToken: !GetAtt UpdateCnameFunction.Arn
-      HostedZoneId: Z1JYG3XEZZ05O1
-      Name: lefthandside.boto3.felipe1982.com
-      Type: CNAME
-      Value: aws.amazon.com
-      # CertificateArn: 'arn:aws:acm:us-east-1:638088845137:certificate/def5f55f-13b6-49dd-9d85-477d19f275ef'
+      Code: ../lambda/
+      Description: String
+      Handler: request_certificate.handler
+      MemorySize: 128
+      Role: !GetAtt CertificateProviderLambdaRole.Arn
+      Runtime: python3.8
+      Timeout: 5
+
+  GetAcmCnameFunction:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Code: ../lambda/
+      Description: String
+      Handler: get_acm_cname.handler
+      MemorySize: 128
+      Role: !GetAtt CertificateProviderLambdaRole.Arn
+      Runtime: python3.8
+      Timeout: 5
+
   UpdateCnameFunction:
     Type: "AWS::Lambda::Function"
     Properties:
@@ -23,6 +36,29 @@ Resources:
       Role: !GetAtt CertificateProviderLambdaRole.Arn
       Runtime: python3.8
       Timeout: 5
+
+  RequestCertificate:
+    Type: "Custom::RequestCertificate"
+    Properties:
+      ServiceToken: !GetAtt RequestCertificateFunction.Arn
+      DomainName: random10.felipe1982.com
+
+  GetAcmCname:
+    Type: "Custom::GetAcmCname"
+    Properties:
+      ServiceToken: !GetAtt GetAcmCnameFunction.Arn
+      CertificateArn: !GetAtt RequestCertificate.Arn
+      DomainName: random10.felipe1982.com
+
+  # UpdateCname:
+  #   Type: "Custom::UpdateCname"
+  #   Properties:
+  #     ServiceToken: !GetAtt UpdateCnameFunction.Arn
+  #     HostedZoneId: Z1JYG3XEZZ05O1
+  #     Name: !GetAtt GetAcmCname.Name
+  #     Type: !GetAtt GetAcmCname.Type
+  #     Value: !GetAtt GetAcmCname.Value
+
   CertificateProviderLambdaRole:
     Type: "AWS::IAM::Role"
     Properties:
@@ -50,8 +86,14 @@ Resources:
                   - 'acm:GetCertificate'
                   - 'acm:ListCertificates'
                   - 'acm:RequestCertificate'
+                Resource: '*'
+        - PolicyName: UpdateResourceRecordSets
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
                   - 'route53:ChangeResourceRecordSets'
                   - 'route53:ListResourceRecordSets'
                   - 'route53:GetChange'
                 Resource: '*'
-

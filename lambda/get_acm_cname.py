@@ -15,6 +15,7 @@ def get_certificate_cname_list(CertificateArn, DomainName):
     return cname_dict
 
 @helper.create
+@helper.update
 def create(event,context):
     CertificateArn = event['ResourceProperties']['CertificateArn']
     DomainName = event['ResourceProperties']['DomainName']
@@ -24,10 +25,7 @@ def create(event,context):
 
 @helper.delete
 def noop(event, context):
-    pass
+    return None
 
 def handler(event, context):
     helper(event, context)
-
-if __name__ == '__main__':
-    print(get_certificate_cname_list('arn:aws:acm:us-east-1:638088845137:certificate/def5f55f-13b6-49dd-9d85-477d19f275ef', 'www.felipe1982.com'))

@@ -74,8 +74,10 @@ deploy: $(TEMPLATE_OUTPUT)
 clean:
 	-rm $(TEMPLATE_OUTPUT)
 delete:
-	aws cloudformation delete-stack --stack-name $(LAMBDA_STACK_NAME)
+	aws cloudformation delete-stack --stack-name $(LAMBDA_STACK_NAME); $(MAKE) wait
+wait:
+	aws cloudformation wait stack-delete-complete --stack-name $(LAMBDA_STACK_NAME)
 .PHONY: all build-clean hugo bucket sync server create-stack \
 	update-stack wait-create-stack wait-update-stack \
 	validate-template create-github-token update-github-token \
-	lint clean delete
+	lint clean delete wait
